@@ -1,14 +1,21 @@
 const User = require("../models/User");
 
+const ALLOWED_ROLES = ["customer", "driver", "owner"];
+
 exports.registerUser = async (req, res) => {
   try {
-    const { name, email, password, role = "customer" } = req.body;
+    const { name, email, password, role } = req.body;
+    const selectedRole = role || "customer";
+
+    if (!ALLOWED_ROLES.includes(selectedRole)) {
+      return res.status(400).json({ error: "Invalid role selected" });
+    }
 
     const user = await User.create({
       name,
       email,
       password,
-      role
+      role: selectedRole
     });
 
     res.json(user);
