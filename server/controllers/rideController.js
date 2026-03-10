@@ -3,6 +3,26 @@ const Vehicle = require("../models/Vehicle");
 
 const getAuthenticatedUserId = (req) => req.user?._id || req.user?.id;
 
+const isRideParticipant = (ride, userId, role) => {
+  if (!userId || !role) {
+    return false;
+  }
+
+  if (role === "customer") {
+    return ride.customerId?.toString() === userId.toString();
+  }
+
+  if (role === "driver") {
+    return ride.driverId?.toString() === userId.toString();
+  }
+
+  if (role === "owner") {
+    return ride.ownerId?.toString() === userId.toString();
+  }
+
+  return false;
+};
+
 exports.createRideRequest = async (req, res) => {
   try {
     const customerId = getAuthenticatedUserId(req);
@@ -225,7 +245,7 @@ exports.startRide = async (req, res) => {
       return res.status(403).json({ error: "Forbidden: ride is not assigned to this driver" });
     }
 
-    if (!ride.canTransitionTo("ongoing")) {
+    if (ride.status !== "driver_assigned" || !ride.canTransitionTo("ongoing")) {
       return res.status(400).json({ error: "Ride cannot be started in its current status" });
     }
 
@@ -257,7 +277,7 @@ exports.completeRide = async (req, res) => {
       return res.status(403).json({ error: "Forbidden: ride is not assigned to this driver" });
     }
 
-    if (!ride.canTransitionTo("completed")) {
+    if (ride.status !== "ongoing" || !ride.canTransitionTo("completed")) {
       return res.status(400).json({ error: "Ride cannot be completed in its current status" });
     }
 
@@ -265,6 +285,69 @@ exports.completeRide = async (req, res) => {
     await ride.save();
 
     return res.status(200).json({ message: "Ride completed successfully", ride });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+exports.cancelRide = async (req, res) => {
+  try {
+    const userId = getAuthenticatedUserId(req);
+    const userRole = req.user?.role;
+    const { id } = req.params;
+
+    if (!userId || !userRole) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const ride = await Ride.findById(id);
+
+    if (!ride) {
+      return res.status(404).json({ error: "Ride not found" });
+    }
+
+    if (!isRideParticipant(ride, userId, userRole)) {
+      return res.status(403).json({ error: "Forbidden: you are not part of this ride" });
+    }
+
+    if (["ongoing", "completed", "cancelled"].includes(ride.status)) {
+      return res.status(400).json({ error: "Ride cannot be cancelled in its current status" });
+    }
+
+    ride.status = "cancelled";
+    await ride.save();
+
+    return res.status(200).json({ message: "Ride cancelled successfully", ride });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getRideDetails = async (req, res) => {
+  try {
+    const userId = getAuthenticatedUserId(req);
+    const userRole = req.user?.role;
+    const { id } = req.params;
+
+    if (!userId || !userRole) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const ride = await Ride.findById(id)
+      .populate("customerId", "name email role")
+      .populate("driverId", "name email role")
+      .populate("ownerId", "name email role")
+      .populate("vehicleId");
+
+    if (!ride) {
+      return res.status(404).json({ error: "Ride not found" });
+    }
+
+    if (!isRideParticipant(ride, userId, userRole)) {
+      return res.status(403).json({ error: "Forbidden: you are not part of this ride" });
+    }
+
+    return res.status(200).json(ride);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
