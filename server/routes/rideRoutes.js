@@ -2,17 +2,15 @@ const express = require("express");
 const router = express.Router();
 
 const {
-  requestRide,
-  approveRideByOwner,
-  acceptRideByDriver,
-  completeRide
+  createRideRequest,
+  getCustomerRides,
+  getPendingRides
 } = require("../controllers/rideController");
 const authMiddleware = require("../middleware/authMiddleware");
 const authorizeRoles = require("../middleware/roleMiddleware");
 
-router.post("/request", authMiddleware, authorizeRoles("customer"), requestRide);
-router.post("/approve", approveRideByOwner);
-router.post("/accept", authMiddleware, authorizeRoles("driver"), acceptRideByDriver);
-router.post("/complete", completeRide);
+router.post("/request", authMiddleware, authorizeRoles("customer"), createRideRequest);
+router.get("/my", authMiddleware, getCustomerRides);
+router.get("/pending", authMiddleware, getPendingRides);
 
 module.exports = router;

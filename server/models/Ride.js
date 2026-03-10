@@ -3,27 +3,34 @@ const mongoose = require("mongoose");
 const rideSchema = new mongoose.Schema({
   customerId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
-  },
-  ownerId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
+    ref: "User",
+    required: true
   },
   driverId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
+    ref: "User",
+    default: null
   },
   vehicleId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Vehicle"
+    ref: "Vehicle",
+    default: null
   },
-  pickupLocation: String,
-  dropLocation: String,
+  pickupLocation: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  destination: {
+    type: String,
+    required: true,
+    trim: true
+  },
   status: {
     type: String,
-    default: "requested"
-  },
-  fare: Number
+    enum: ["pending", "approved", "driver_assigned", "ongoing", "completed", "cancelled"],
+    default: "pending"
+  }
 }, { timestamps: true });
 
 module.exports = mongoose.model("Ride", rideSchema);
