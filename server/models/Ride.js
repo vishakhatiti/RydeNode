@@ -2,19 +2,19 @@ const mongoose = require("mongoose");
 
 const RIDE_STATUS = {
   PENDING: "pending",
+  OWNER_APPROVED: "owner_approved",
   DRIVER_ASSIGNED: "driver_assigned",
   ONGOING: "ongoing",
   COMPLETED: "completed",
-  APPROVED: "approved",
   CANCELLED: "cancelled"
 };
 
 const STATUS_TRANSITIONS = {
-  [RIDE_STATUS.PENDING]: [RIDE_STATUS.DRIVER_ASSIGNED],
+  [RIDE_STATUS.PENDING]: [RIDE_STATUS.OWNER_APPROVED],
+  [RIDE_STATUS.OWNER_APPROVED]: [RIDE_STATUS.DRIVER_ASSIGNED],
   [RIDE_STATUS.DRIVER_ASSIGNED]: [RIDE_STATUS.ONGOING],
   [RIDE_STATUS.ONGOING]: [RIDE_STATUS.COMPLETED],
   [RIDE_STATUS.COMPLETED]: [],
-  [RIDE_STATUS.APPROVED]: [],
   [RIDE_STATUS.CANCELLED]: []
 };
 
@@ -32,6 +32,11 @@ const rideSchema = new mongoose.Schema({
   vehicleId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Vehicle",
+    default: null
+  },
+  ownerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
     default: null
   },
   pickupLocation: {
