@@ -11,7 +11,9 @@ const {
   rejectRideVehicle,
   acceptRide,
   startRide,
-  completeRide
+  completeRide,
+  cancelRide,
+  getRideDetails
 } = require("../controllers/rideController");
 const authMiddleware = require("../middleware/authMiddleware");
 const authorizeRoles = require("../middleware/roleMiddleware");
@@ -28,5 +30,7 @@ router.get("/available", authMiddleware, authorizeRoles("driver"), getAvailableR
 router.patch("/:id/accept", authMiddleware, authorizeRoles("driver"), acceptRide);
 router.patch("/:id/start", authMiddleware, authorizeRoles("driver"), startRide);
 router.patch("/:id/complete", authMiddleware, authorizeRoles("driver"), completeRide);
+router.patch("/:id/cancel", authMiddleware, authorizeRoles("driver", "customer", "owner"), cancelRide);
+router.get("/:id", authMiddleware, authorizeRoles("driver", "customer", "owner"), getRideDetails);
 
 module.exports = router;
