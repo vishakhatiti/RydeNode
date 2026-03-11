@@ -6,17 +6,22 @@
   color-scheme: dark;
 }
 
-body {
-  margin: 0;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  background: #0f0f0f;
-  color: #fff;
+@layer base {
+  * {
+    @apply border-white/10;
+  }
+
+  body {
+    @apply m-0 min-h-screen bg-midnight bg-luxury font-sans text-white antialiased;
+  }
+
+  #root {
+    @apply min-h-screen;
+  }
 }
 
-.input {
-  @apply w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-white placeholder-gray-400 outline-none transition focus:border-electric-blue;
-}
-
-.glow-btn {
-  @apply bg-gradient-to-r from-electric-blue to-neon-purple text-white shadow-[0_0_24px_rgba(46,139,255,0.45)] transition hover:scale-[1.01] hover:shadow-[0_0_32px_rgba(138,43,226,0.55)];
+@layer components {
+  .luxury-panel {
+    @apply rounded-2xl border border-white/15 bg-white/5 backdrop-blur-xl;
+  }
 }
