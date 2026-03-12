@@ -2,7 +2,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import { motion } from "framer-motion";
 
-import Navbar from "../components/Navbar";
+import Navbar from "../components/layout/Navbar";
 
 function DashboardLayout() {
   return (

@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 
-import MainLayout from "./layouts/MainLayout";
+import MainLayout from "./components/layout/MainLayout";
 import DashboardLayout from "./layouts/DashboardLayout";
 
 import LandingPage from "./pages/LandingPage";
