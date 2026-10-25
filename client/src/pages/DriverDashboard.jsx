@@ -16,10 +16,10 @@ function DriverDashboard() {
         <h2 className="text-xl font-semibold">Available Rides</h2>
         <div className="mt-4 space-y-3">
           {rides.length === 0 ? (
-            <p className="text-sm text-gray-300">No rides yet. Stay online for new requests.</p>
+            <p className="text-sm text-muted">No rides yet. Stay online for new requests.</p>
           ) : (
             rides.map((ride) => (
-              <div key={ride._id} className="flex items-center justify-between rounded-xl border border-white/10 p-3">
+              <div key={ride._id} className="flex items-center justify-between rounded-xl border border-line/15 p-3">
                 <span>{ride.pickup} → {ride.destination}</span>
                 <button className="glow-btn rounded-lg px-3 py-1 text-sm" type="button">Accept</button>
               </div>
@@ -29,7 +29,7 @@ function DriverDashboard() {
       </GlassCard>
       <div className="space-y-6">
         <GlassCard>
-          <p className="text-sm text-gray-300">Today Earnings</p>
+          <p className="text-sm text-muted">Today Earnings</p>
           <p className="mt-1 text-3xl font-bold">₹5,280</p>
         </GlassCard>
         <GlassCard>

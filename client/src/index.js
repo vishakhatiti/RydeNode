@@ -6,17 +6,20 @@ import "./styles/global.css";
 import { AuthProvider } from "./contexts/AuthContext";
 import { RideProvider } from "./contexts/RideContext";
 import { ToastProvider } from "./contexts/ToastContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <React.StrictMode>
-    <ToastProvider>
-      <AuthProvider>
-        <RideProvider>
-          <App />
-        </RideProvider>
-      </AuthProvider>
-    </ToastProvider>
+    <ThemeProvider>
+      <ToastProvider>
+        <AuthProvider>
+          <RideProvider>
+            <App />
+          </RideProvider>
+        </AuthProvider>
+      </ToastProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );

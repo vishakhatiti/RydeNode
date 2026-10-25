@@ -14,10 +14,10 @@ function RideHistory() {
       <h1 className="text-2xl font-semibold">Ride History</h1>
       <div className="mt-4 space-y-2">
         {rides.length === 0 ? (
-          <p className="text-sm text-gray-300">No ride history available.</p>
+          <p className="text-sm text-muted">No ride history available.</p>
         ) : (
           rides.map((ride) => (
-            <div key={ride._id} className="rounded-lg border border-white/10 p-3 text-sm">
+            <div key={ride._id} className="rounded-lg border border-line/15 p-3 text-sm">
               {ride.pickup} → {ride.destination} · {ride.status}
             </div>
           ))

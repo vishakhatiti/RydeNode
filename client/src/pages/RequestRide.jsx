@@ -22,7 +22,7 @@ function RequestRide() {
           <input className="input" placeholder="Destination" required onChange={(e) => setForm({ ...form, destination: e.target.value })} />
           <button className="glow-btn w-full rounded-lg py-2" type="submit">Confirm Ride</button>
         </form>
-        {message && <p className="mt-3 text-sm text-electric-blue">{message}</p>}
+        {message && <p className="mt-3 text-sm text-brand">{message}</p>}
       </GlassCard>
       <MapView />
     </section>

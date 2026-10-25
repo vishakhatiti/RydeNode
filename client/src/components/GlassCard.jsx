@@ -4,9 +4,9 @@ import { motion } from "framer-motion";
 function GlassCard({ children, className = "", as: Component = "div" }) {
   return (
     <motion.div
-      whileHover={{ y: -4, scale: 1.01 }}
-      transition={{ type: "spring", stiffness: 180, damping: 18 }}
-      className={`rounded-2xl border border-white/20 bg-white/10 p-5 shadow-[0_0_35px_rgba(46,139,255,0.12)] backdrop-blur-xl ${className}`}
+      whileHover={{ y: -3 }}
+      transition={{ type: "spring", stiffness: 220, damping: 20 }}
+      className={`rounded-2xl border border-line/20 bg-surface/80 p-5 shadow-card backdrop-blur-xl transition-colors hover:border-brand/40 ${className}`}
     >
       <Component>{children}</Component>
     </motion.div>

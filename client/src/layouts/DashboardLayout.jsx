@@ -6,7 +6,7 @@ import Navbar from "../components/Navbar";
 
 function DashboardLayout() {
   return (
-    <div className="min-h-screen bg-midnight text-white">
+    <div className="min-h-screen text-fg">
       <Navbar />
       <motion.main
         className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8"

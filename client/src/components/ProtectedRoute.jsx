@@ -9,7 +9,7 @@ function ProtectedRoute({ roles }) {
   const location = useLocation();
 
   if (checking) {
-    return <p className="py-20 text-center text-gray-400">Loading your session…</p>;
+    return <p className="py-20 text-center text-subtle">Loading your session…</p>;
   }
 
   if (!user) {

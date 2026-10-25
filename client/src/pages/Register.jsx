@@ -58,14 +58,14 @@ function Register() {
   return (
     <GlassCard className="mx-auto max-w-md animate-fade-up">
       <h1 className="text-2xl font-semibold">Create Your Account</h1>
-      <p className="mt-1 text-sm text-gray-400">Pick your role to get started.</p>
+      <p className="mt-1 text-sm text-subtle">Pick your role to get started.</p>
       <form className="mt-5 space-y-4" onSubmit={handleSubmit} noValidate>
         <Input label="Full name" required autoComplete="name" value={form.name} onChange={update("name")} error={errors.name} />
         <Input label="Email" type="email" required autoComplete="email" value={form.email} onChange={update("email")} />
         <Input label="Password" type="password" required autoComplete="new-password" value={form.password} onChange={update("password")} error={errors.password} />
         <Input label="I want to join as" as="select" value={form.role} onChange={update("role")}>
           {ROLES.map((role) => (
-            <option key={role.value} value={role.value} className="bg-graphite">
+            <option key={role.value} value={role.value} className="bg-surface">
               {role.label}
             </option>
           ))}
@@ -74,9 +74,9 @@ function Register() {
           {loading ? "Creating account…" : "Register"}
         </Button>
       </form>
-      <p className="mt-4 text-center text-sm text-gray-400">
+      <p className="mt-4 text-center text-sm text-subtle">
         Already registered?{" "}
-        <Link className="text-electric-blue transition hover:underline" to="/login">
+        <Link className="text-brand transition hover:underline" to="/login">
           Log in
         </Link>
       </p>

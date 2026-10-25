@@ -43,7 +43,7 @@ function Login() {
   return (
     <GlassCard className="mx-auto max-w-md animate-fade-up">
       <h1 className="text-2xl font-semibold">Welcome Back</h1>
-      <p className="mt-1 text-sm text-gray-400">Log in to continue your journey.</p>
+      <p className="mt-1 text-sm text-subtle">Log in to continue your journey.</p>
       <form className="mt-5 space-y-4" onSubmit={handleSubmit}>
         <Input label="Email" type="email" required autoComplete="email" value={form.email} onChange={update("email")} />
         <Input label="Password" type="password" required autoComplete="current-password" value={form.password} onChange={update("password")} />
@@ -51,9 +51,9 @@ function Login() {
           {loading ? "Logging in…" : "Login"}
         </Button>
       </form>
-      <p className="mt-4 text-center text-sm text-gray-400">
+      <p className="mt-4 text-center text-sm text-subtle">
         New here?{" "}
-        <Link className="text-electric-blue transition hover:underline" to="/register">
+        <Link className="text-brand transition hover:underline" to="/register">
           Create an account
         </Link>
       </p>

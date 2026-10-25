@@ -28,11 +28,11 @@ function OwnerDashboard() {
       <div className="space-y-4">
         <GlassCard>
           <h3 className="font-semibold">Ride Approvals</h3>
-          <p className="mt-2 text-sm text-gray-300">12 pending requests requiring owner confirmation.</p>
+          <p className="mt-2 text-sm text-muted">12 pending requests requiring owner confirmation.</p>
         </GlassCard>
         <GlassCard>
           <h3 className="font-semibold">Vehicle Analytics</h3>
-          <p className="mt-2 text-sm text-gray-300">Utilization 87% · Avg ROI ₹42,000/month</p>
+          <p className="mt-2 text-sm text-muted">Utilization 87% · Avg ROI ₹42,000/month</p>
         </GlassCard>
       </div>
     </section>

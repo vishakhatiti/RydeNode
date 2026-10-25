@@ -23,9 +23,9 @@ function MapView({ pickup = [77.5946, 12.9716], destination = [77.64, 12.99], dr
 
     const addMarker = (coords, color) => new mapboxgl.Marker({ color }).setLngLat(coords).addTo(map);
 
-    addMarker(pickup, "#2E8BFF");
-    addMarker(destination, "#8A2BE2");
-    addMarker(driver, "#00E0A4");
+    addMarker(pickup, "#6366F1");
+    addMarker(destination, "#22D3EE");
+    addMarker(driver, "#34D399");
 
     map.on("load", () => {
       map.addSource("route", {
@@ -45,7 +45,7 @@ function MapView({ pickup = [77.5946, 12.9716], destination = [77.64, 12.99], dr
         type: "line",
         source: "route",
         paint: {
-          "line-color": "#2E8BFF",
+          "line-color": "#6366F1",
           "line-width": 4,
           "line-opacity": 0.8
         }
@@ -59,12 +59,12 @@ function MapView({ pickup = [77.5946, 12.9716], destination = [77.64, 12.99], dr
   if (!token) {
     return (
       <GlassCard className="h-72">
-        <p className="text-sm text-gray-300">Map preview is enabled when REACT_APP_MAPBOX_TOKEN is configured.</p>
+        <p className="text-sm text-muted">Map preview is enabled when REACT_APP_MAPBOX_TOKEN is configured.</p>
       </GlassCard>
     );
   }
 
-  return <div ref={containerRef} className="h-72 w-full overflow-hidden rounded-2xl border border-white/20" aria-label="Ride map view" />;
+  return <div ref={containerRef} className="h-72 w-full overflow-hidden rounded-2xl border border-line/25" aria-label="Ride map view" />;
 }
 
 export default MapView;

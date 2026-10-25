@@ -23,13 +23,13 @@ function Modal({ open, onClose, title, children }) {
             role="dialog"
             aria-modal="true"
             aria-label={title}
-            className="w-full max-w-md rounded-2xl border border-white/20 bg-graphite p-6 shadow-2xl"
+            className="w-full max-w-md rounded-2xl border border-line/25 bg-surface p-6 shadow-2xl"
             initial={{ opacity: 0, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.97 }}
             onClick={(e) => e.stopPropagation()}
           >
-            {title && <h2 className="mb-3 text-xl font-semibold text-white">{title}</h2>}
+            {title && <h2 className="mb-3 text-xl font-semibold text-fg">{title}</h2>}
             {children}
           </motion.div>
         </motion.div>

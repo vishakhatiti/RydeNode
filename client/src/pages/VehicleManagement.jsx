@@ -21,7 +21,7 @@ function VehicleManagement() {
         <input className="input" placeholder="Plate Number" required onChange={(e) => setVehicle({ ...vehicle, plate: e.target.value })} />
         <button className="glow-btn w-full rounded-lg py-2" type="submit">Add Vehicle</button>
       </form>
-      {status && <p className="mt-2 text-sm text-electric-blue">{status}</p>}
+      {status && <p className="mt-2 text-sm text-brand">{status}</p>}
     </GlassCard>
   );
 }

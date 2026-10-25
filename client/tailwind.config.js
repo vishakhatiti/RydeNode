@@ -1,15 +1,28 @@
+const withAlpha = (variable) => `rgb(var(${variable}) / <alpha-value>)`;
+
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  darkMode: ["selector", '[data-theme="dark"]'],
   theme: {
     extend: {
       colors: {
-        midnight: "#0F0F0F",
-        graphite: "#1C1C1C",
-        "electric-blue": "#2E8BFF",
-        "neon-purple": "#8A2BE2",
-        success: "#00E0A4",
-        warning: "#FFB020",
-        danger: "#FF5A5F"
+        base: withAlpha("--c-base"),
+        surface: withAlpha("--c-surface"),
+        "surface-2": withAlpha("--c-surface-2"),
+        line: withAlpha("--c-line"),
+        fg: withAlpha("--c-fg"),
+        muted: withAlpha("--c-muted"),
+        subtle: withAlpha("--c-subtle"),
+        brand: withAlpha("--c-brand"),
+        accent: withAlpha("--c-accent"),
+        sun: withAlpha("--c-sun"),
+        success: withAlpha("--c-success"),
+        warning: withAlpha("--c-warning"),
+        danger: withAlpha("--c-danger")
+      },
+      boxShadow: {
+        card: "0 1px 2px rgb(0 0 0 / 0.06), 0 12px 32px -12px rgb(var(--c-brand) / 0.25)",
+        glow: "0 8px 24px -6px rgb(var(--c-brand) / 0.55)"
       },
       keyframes: {
         "toast-in": {

@@ -22,7 +22,7 @@ function CustomerDashboard() {
       <div className="space-y-6">
         <GlassCard>
           <h3 className="text-lg font-semibold">Fare Preview</h3>
-          <p className="mt-2 text-sm text-gray-300">Estimated fare: ₹420 · ETA: 14 mins</p>
+          <p className="mt-2 text-sm text-muted">Estimated fare: ₹420 · ETA: 14 mins</p>
         </GlassCard>
         <RideStatusCard status={status} eta="6 mins" />
       </div>

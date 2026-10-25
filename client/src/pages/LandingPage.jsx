@@ -19,16 +19,16 @@ function LandingPage() {
         <div className="grid gap-6 md:grid-cols-3">
           {roles.map((role) => (
             <GlassCard key={role.title}>
-              <h3 className="text-xl font-semibold text-white">{role.title}</h3>
-              <p className="mt-2 text-sm text-gray-300">{role.desc}</p>
+              <h3 className="text-xl font-semibold text-fg">{role.title}</h3>
+              <p className="mt-2 text-sm text-muted">{role.desc}</p>
             </GlassCard>
           ))}
         </div>
       </section>
 
-      <section className="rounded-3xl border border-electric-blue/40 bg-electric-blue/10 p-8 text-center">
+      <section className="rounded-3xl border border-brand/40 bg-brand/10 p-8 text-center">
         <h3 className="text-2xl font-semibold">Ready to transform ride logistics?</h3>
-        <p className="mt-2 text-gray-300">Experience real-time operations with premium UX and intelligent orchestration.</p>
+        <p className="mt-2 text-muted">Experience real-time operations with premium UX and intelligent orchestration.</p>
       </section>
     </div>
   );

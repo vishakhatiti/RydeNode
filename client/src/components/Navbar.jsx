@@ -4,6 +4,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import useToast from "../hooks/useToast";
 import Button from "./ui/Button";
+import ThemeToggle from "./ui/ThemeToggle";
 
 const LINKS_BY_ROLE = {
   customer: [
@@ -32,10 +33,10 @@ function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-black/50 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-line/15 bg-base/75 backdrop-blur-xl">
       <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
-        <Link className="text-xl font-bold tracking-wide text-white" to="/">
-          RYDE<span className="text-electric-blue">NODE</span>
+        <Link className="text-xl font-bold tracking-wide text-fg" to="/">
+          RYDE<span className="text-brand">NODE</span>
         </Link>
 
         <ul className="hidden gap-6 md:flex">
@@ -44,7 +45,7 @@ function Navbar() {
               <NavLink
                 to={link.to}
                 className={({ isActive }) =>
-                  `text-sm transition ${isActive ? "text-electric-blue" : "text-gray-300 hover:text-white"}`
+                  `text-sm transition ${isActive ? "text-brand" : "text-muted hover:text-fg"}`
                 }
               >
                 {link.label}
@@ -54,10 +55,11 @@ function Navbar() {
         </ul>
 
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           {user ? (
             <>
-              <span className="hidden text-sm text-gray-300 sm:inline">
-                {user.name} · <span className="capitalize text-electric-blue">{user.role}</span>
+              <span className="hidden text-sm text-muted sm:inline">
+                {user.name} · <span className="capitalize text-brand">{user.role}</span>
               </span>
               <Button variant="ghost" onClick={handleLogout}>
                 Logout
@@ -65,7 +67,7 @@ function Navbar() {
             </>
           ) : (
             <>
-              <Link className="rounded-lg px-4 py-2 text-sm text-gray-300 transition hover:text-white" to="/login">
+              <Link className="rounded-lg px-4 py-2 text-sm text-muted transition hover:text-fg" to="/login">
                 Login
               </Link>
               <Link className="glow-btn rounded-lg px-4 py-2 text-sm font-semibold" to="/register">

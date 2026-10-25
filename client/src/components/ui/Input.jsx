@@ -6,7 +6,7 @@ function Input({ label, error, className = "", children, as: Tag = "input", ...p
   return (
     <div className="space-y-1">
       {label && (
-        <label htmlFor={id} className="block text-sm text-gray-300">
+        <label htmlFor={id} className="block text-sm text-muted">
           {label}
         </label>
       )}

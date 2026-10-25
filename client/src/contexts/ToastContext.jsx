@@ -7,7 +7,7 @@ const TOAST_MS = 3500;
 const styles = {
   success: "border-success/60 text-success",
   error: "border-danger/60 text-danger",
-  info: "border-electric-blue/60 text-electric-blue"
+  info: "border-brand/60 text-brand"
 };
 
 export function ToastProvider({ children }) {
@@ -44,7 +44,7 @@ export function ToastProvider({ children }) {
             key={t.id}
             type="button"
             onClick={() => dismiss(t.id)}
-            className={`pointer-events-auto animate-toast-in rounded-xl border bg-graphite/95 px-4 py-3 text-left text-sm shadow-lg backdrop-blur ${styles[t.type]}`}
+            className={`pointer-events-auto animate-toast-in rounded-xl border bg-surface/95 px-4 py-3 text-left text-sm shadow-lg backdrop-blur ${styles[t.type]}`}
           >
             {t.message}
           </button>

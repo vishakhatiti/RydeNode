@@ -2,7 +2,7 @@ import React from "react";
 
 const variants = {
   primary: "glow-btn",
-  ghost: "border border-white/20 bg-white/5 text-white hover:border-electric-blue hover:bg-white/10",
+  ghost: "border border-line/30 bg-surface/60 text-fg hover:border-brand hover:bg-fg/5",
   danger: "bg-danger/90 text-white hover:bg-danger"
 };
 
