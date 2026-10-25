@@ -1,112 +1,63 @@
-import React, { Suspense, lazy, useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
-import HeroBackground from "./HeroBackground";
+import HeroVisual from "./HeroVisual";
+import Icon from "../ui/Icon";
 
-const Hero3DScene = lazy(() => import("./Hero3DScene"));
+const rise = (delay) => ({
+  initial: { opacity: 0, y: 18 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.6, delay, ease: "easeOut" }
+});
 
 function HeroSection() {
-  const [show3D, setShow3D] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 1024px)");
-
-    const handleMediaChange = (event) => {
-      setShow3D(event.matches);
-    };
-
-    setShow3D(mediaQuery.matches);
-    mediaQuery.addEventListener("change", handleMediaChange);
-
-    return () => {
-      mediaQuery.removeEventListener("change", handleMediaChange);
-    };
-  }, []);
-
   return (
-    <section className="relative min-h-[82vh] overflow-hidden rounded-3xl border border-white/10 bg-[#0B1022] px-6 py-12 sm:px-10 lg:px-14 lg:py-16">
-      <HeroBackground />
-
-      <div className="relative z-10 grid items-center gap-10 lg:grid-cols-2">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: "easeOut" }}
-          className="rounded-3xl border border-white/15 bg-white/5 p-7 backdrop-blur-lg sm:p-9"
+    <section className="grid items-center gap-12 py-6 lg:grid-cols-2 lg:py-12">
+      <div>
+        <motion.span
+          {...rise(0)}
+          className="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-brand"
         >
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="mb-4 inline-flex rounded-full border border-[#6366F1]/50 bg-[#6366F1]/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-[#A5B4FC]"
-          >
-            RYDENODE Mobility
-          </motion.p>
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent" />
+          Tri-node mobility
+        </motion.span>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-4xl font-bold leading-tight text-white sm:text-5xl"
-          >
-            Next Generation Ride Platform
-          </motion.h1>
+        <motion.h1 {...rise(0.1)} className="mt-5 text-4xl font-extrabold leading-[1.1] sm:text-5xl lg:text-6xl">
+          Rides powered by{" "}
+          <span className="bg-gradient-to-r from-brand to-accent bg-clip-text text-transparent">people and their cars</span>
+        </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="mt-5 max-w-xl text-base text-gray-300 sm:text-lg"
-          >
-            Connecting Customers, Drivers, and Vehicle Owners in one intelligent mobility network.
-          </motion.p>
+        <motion.p {...rise(0.2)} className="mt-5 max-w-xl text-base text-muted sm:text-lg">
+          RydeNode connects customers, car owners and drivers in one network. Owners earn from idle vehicles, drivers work without
+          buying a car, and riders get a trusted trip.
+        </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="mt-8 flex flex-wrap gap-4"
+        <motion.div {...rise(0.3)} className="mt-8 flex flex-wrap gap-4">
+          <Link to="/register" className="glow-btn inline-flex items-center gap-2 rounded-xl px-6 py-3 font-semibold">
+            Get started <Icon name="arrow" size={18} />
+          </Link>
+          <Link
+            to="/login"
+            className="inline-flex items-center rounded-xl border border-line/30 bg-surface/60 px-6 py-3 font-semibold text-fg transition hover:-translate-y-0.5 hover:border-brand"
           >
-            <Link
-              to="/register"
-              aria-label="Request Ride"
-              className="glow-btn rounded-xl px-6 py-3 font-semibold"
-            >
-              Request Ride
-            </Link>
-            <Link
-              to="/register"
-              aria-label="Become a Driver"
-              className="rounded-xl border border-[#22D3EE]/50 bg-[#22D3EE]/10 px-6 py-3 font-semibold text-white transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_24px_rgba(34,211,238,0.45)]"
-            >
-              Become a Driver
-            </Link>
-          </motion.div>
+            I already have an account
+          </Link>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.0, delay: 0.2 }}
-          className="relative h-[280px] overflow-hidden rounded-3xl border border-white/15 bg-[#141B33]/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_20px_70px_rgba(0,0,0,0.45)] sm:h-[360px] lg:h-[520px]"
-        >
-          {show3D ? (
-            <Suspense
-              fallback={<div className="h-full w-full animate-pulse bg-gradient-to-br from-[#141B33] via-[#10173A] to-[#0B1022]" />}
-            >
-              <Hero3DScene />
-            </Suspense>
-          ) : (
-            <div className="flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_30%_20%,rgba(99,102,241,0.35),transparent_40%),radial-gradient(circle_at_75%_70%,rgba(34,211,238,0.45),transparent_45%),#0B1022]">
-              <div className="rounded-2xl border border-white/20 bg-black/30 px-6 py-4 text-center backdrop-blur-md">
-                <p className="text-xs uppercase tracking-[0.25em] text-gray-300">Mobile Optimized</p>
-                <p className="mt-2 text-xl font-semibold text-white">Premium RYDENODE Experience</p>
-              </div>
-            </div>
-          )}
-        </motion.div>
+        <motion.ul {...rise(0.4)} className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted">
+          {["Open sign-up in minutes", "Owner-approved vehicles", "Live ride tracking"].map((item) => (
+            <li key={item} className="flex items-center gap-2">
+              <Icon name="check" size={16} className="text-success" />
+              {item}
+            </li>
+          ))}
+        </motion.ul>
       </div>
+
+      <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }}>
+        <HeroVisual />
+      </motion.div>
     </section>
   );
 }
