@@ -1,229 +1,80 @@
 # ARCHITECTURE.md
 
-This document describes the **system architecture of the RYDENODE platform**.
+Single source of truth for how RydeNode is built. Update it when the design changes.
 
-RYDENODE is designed as a **Tri-Node Ride Hailing Platform** connecting:
+## 1. Product
 
-Customer
-Car Owner
-Driver
+Tri-node ride platform: **Customer → Car Owner → Driver**, plus an **Admin** who verifies and supervises.
 
-The system separates **vehicle ownership from driving service**.
+| Role | Interface | Core jobs |
+|---|---|---|
+| Customer | Mobile-first web app | Book ride, see fare, track trip, history |
+| Driver | Mobile-first web app | Go online, accept ride, start/complete, earnings |
+| Car Owner | Dashboard | Register vehicles, approve ride requests, utilisation |
+| Admin | Dashboard | Verify drivers/vehicles, monitor rides, complaints |
 
----
+## 2. Constraints (current phase)
 
-# 1. High Level Architecture
+- Free tier only: MongoDB Atlas (M0), Render (API), Vercel (client).
+- No OTP / email verification yet. Sign-up is open (admin accounts are never self-registered).
+- Free maps: OpenStreetMap tiles via **Leaflet**, **Nominatim** for geocoding, **OSRM** public server for routes. Respect their usage policies (low volume, identify the app). Swap behind `services/geo` when volume grows.
+- Render free tier sleeps: first request can be slow. Keep the client tolerant (loading states, retries).
 
-The platform follows a **client-server architecture**.
+## 3. System
 
-Frontend applications communicate with backend APIs.
+```
+React (Vercel)  --HTTPS-->  Express API (Render)  -->  MongoDB Atlas
+      \--------- Socket.IO (same API host) ---------/
+```
 
-Architecture flow
+### Backend (`server/`)
 
-Client (React App)
+```
+config/       db connection
+models/       User, Vehicle, Ride            (schemas only)
+routes/       URL -> controller + middleware  (no logic)
+controllers/  business logic
+middleware/   authMiddleware (JWT), roleMiddleware
+sockets/      real-time events
+utils/        generateToken, helpers
+```
 
-↓
+Request lifecycle: `cors → json → route → authMiddleware (sets req.user) → authorizeRoles → controller → model`.
 
-API Server (Node.js + Express)
+### Frontend (`client/src/`)
 
-↓
+```
+pages/        route-level screens, one folder per role
+components/   reusable UI (GlassCard, Toast, Modal, ...)
+contexts/     AuthContext, RideContext, ToastContext
+services/     api.js (axios), socket.js, geo.js
+hooks/        useAuth, useSocket
+layouts/      MainLayout (public), DashboardLayout (role area)
+```
 
-Database (MongoDB Atlas)
+Route guard: `ProtectedRoute` checks login + allowed roles, redirects to the role's home.
 
----
+## 4. Ride lifecycle
 
-# 2. Frontend Layer
+`pending → owner_approved → driver_assigned → ongoing → completed`; `cancelled` from any non-terminal state.
 
-Location
+Rules:
+- Every transition is a single atomic `findOneAndUpdate` conditioned on the current status (prevents two drivers accepting one ride).
+- Each transition emits a Socket.IO `rideStatus` event to the ride room.
+- Only ride participants (and admin) can read or change a ride.
 
-/client
+## 5. Security baseline
 
-Technology
+- Passwords hashed with bcrypt, never returned (`select: false`).
+- JWT in `Authorization: Bearer`, 30-day expiry (shorten + refresh later).
+- Role checks on every protected route; socket handshake authenticated.
+- `CLIENT_URL` restricts CORS in production. Secrets only in env vars.
 
-React.js
-React Router
-Axios
+## 6. Deployment
 
-Responsibilities
+- Render: `server/`, build `npm install`, start `npm start`. Env: `PORT`, `MONGO_URI`, `JWT_SECRET`, `CLIENT_URL`.
+- Vercel: `client/`. Env: `REACT_APP_API_URL`, `REACT_APP_SOCKET_URL`.
 
-User Interface
-Form handling
-API communication
-Session management
+## 7. Later (not now)
 
-Main Components
-
-pages → main views
-components → reusable UI elements
-services → API calls
-
-Example
-
-client/src/services/api.js
-
-Handles all backend requests.
-
----
-
-# 3. Backend Layer
-
-Location
-
-/server
-
-Technology
-
-Node.js
-Express.js
-MongoDB
-JWT Authentication
-
-Backend responsibilities
-
-Business logic
-Authentication
-Database interaction
-Ride management
-
-Backend architecture
-
-controllers → application logic
-routes → API endpoints
-models → MongoDB schemas
-middleware → authentication
-config → database connection
-utils → helper functions
-
----
-
-# 4. Database Layer
-
-Database
-
-MongoDB Atlas
-
-Collections
-
-users
-vehicles
-rides
-
-Relationships
-
-users → vehicles
-users → rides
-vehicles → rides
-
-The database supports the **Tri-Node ride system**.
-
----
-
-# 5. Ride Request Flow
-
-Step 1
-
-Customer requests ride.
-
-↓
-
-Step 2
-
-Ride document created in database.
-
-↓
-
-Step 3
-
-Vehicle owner approves vehicle.
-
-↓
-
-Step 4
-
-Driver accepts ride.
-
-↓
-
-Step 5
-
-Ride status changes to ongoing.
-
-↓
-
-Step 6
-
-Ride completed and payment distributed.
-
----
-
-# 6. Authentication System
-
-Authentication uses **JWT (JSON Web Tokens)**.
-
-Flow
-
-User logs in
-
-↓
-
-Server generates token
-
-↓
-
-Client stores token
-
-↓
-
-Token sent in Authorization header
-
-Example
-
-Authorization: Bearer <token>
-
-Middleware
-
-/server/middleware/authMiddleware.js
-
-Protects private routes.
-
----
-
-# 7. Deployment Architecture
-
-Frontend
-
-Hosted on Vercel.
-
-Backend
-
-Hosted on Render.
-
-Database
-
-MongoDB Atlas.
-
-Production flow
-
-User → Vercel → Backend API → MongoDB
-
----
-
-# 8. Future System Architecture
-
-Planned improvements
-
-Real-time ride matching
-Driver location tracking
-Google Maps integration
-Payment system
-Ride analytics
-
-Possible future stack
-
-Socket.io
-Redis
-Microservices architecture
-
----
-
-# End of Architecture Document
+OTP/email verification, document KYC, payments + revenue split, ratings, notifications, paid maps, admin analytics.
