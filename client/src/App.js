@@ -1,9 +1,9 @@
 import React from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { AnimatePresence } from "framer-motion";
 
 import MainLayout from "./layouts/MainLayout";
 import DashboardLayout from "./layouts/DashboardLayout";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
@@ -18,26 +18,32 @@ import RideHistory from "./pages/RideHistory";
 function App() {
   return (
     <BrowserRouter>
-      <AnimatePresence mode="wait">
-        <Routes>
-          <Route element={<MainLayout />}>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-          </Route>
+      <Routes>
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Route>
 
-          <Route element={<DashboardLayout />}>
+        <Route element={<DashboardLayout />}>
+          <Route element={<ProtectedRoute roles={["customer"]} />}>
             <Route path="/customer" element={<CustomerDashboard />} />
-            <Route path="/driver" element={<DriverDashboard />} />
-            <Route path="/owner" element={<OwnerDashboard />} />
             <Route path="/request-ride" element={<RequestRide />} />
-            <Route path="/vehicles" element={<VehicleManagement />} />
             <Route path="/ride-history" element={<RideHistory />} />
           </Route>
 
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </AnimatePresence>
+          <Route element={<ProtectedRoute roles={["driver"]} />}>
+            <Route path="/driver" element={<DriverDashboard />} />
+          </Route>
+
+          <Route element={<ProtectedRoute roles={["owner"]} />}>
+            <Route path="/owner" element={<OwnerDashboard />} />
+            <Route path="/vehicles" element={<VehicleManagement />} />
+          </Route>
+        </Route>
+
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </BrowserRouter>
   );
 }
