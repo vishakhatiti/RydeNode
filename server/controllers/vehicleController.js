@@ -1,15 +1,27 @@
 const Vehicle = require("../models/Vehicle");
 
+const VEHICLE_TYPES = ["sedan", "suv", "hatchback", "luxury"];
+
+const getOwnerId = (req) => req.user?._id || req.user?.id;
+
 exports.addVehicle = async (req, res) => {
   try {
-    const ownerId = req.user?._id || req.user?.id;
+    const ownerId = getOwnerId(req);
+    const { model, type, availability } = req.body;
+    const vehicleNumber = String(req.body.vehicleNumber || "").replace(/\s+/g, "").toUpperCase();
 
-    const { vehicleNumber, model, type, availability } = req.body;
+    if (!vehicleNumber || !model || !type) {
+      return res.status(400).json({ error: "vehicleNumber, model and type are required" });
+    }
+
+    if (!VEHICLE_TYPES.includes(type)) {
+      return res.status(400).json({ error: `type must be one of: ${VEHICLE_TYPES.join(", ")}` });
+    }
 
     const existingVehicle = await Vehicle.findOne({ vehicleNumber });
 
     if (existingVehicle) {
-      return res.status(400).json({ error: "Vehicle number already exists" });
+      return res.status(409).json({ error: "Vehicle number already exists" });
     }
 
     const vehicle = await Vehicle.create({
@@ -22,13 +34,17 @@ exports.addVehicle = async (req, res) => {
 
     return res.status(201).json(vehicle);
   } catch (error) {
+    if (error.name === "ValidationError") {
+      return res.status(400).json({ error: error.message });
+    }
+
     return res.status(500).json({ error: error.message });
   }
 };
 
 exports.getOwnerVehicles = async (req, res) => {
   try {
-    const ownerId = req.user?._id || req.user?.id;
+    const ownerId = getOwnerId(req);
 
     const vehicles = await Vehicle.find({ ownerId }).sort({ createdAt: -1 });
 
@@ -40,7 +56,7 @@ exports.getOwnerVehicles = async (req, res) => {
 
 exports.updateVehicleAvailability = async (req, res) => {
   try {
-    const ownerId = req.user?._id || req.user?.id;
+    const ownerId = getOwnerId(req);
     const { id } = req.params;
     const { availability } = req.body;
 
@@ -60,13 +76,17 @@ exports.updateVehicleAvailability = async (req, res) => {
 
     return res.status(200).json(vehicle);
   } catch (error) {
+    if (error.name === "CastError") {
+      return res.status(400).json({ error: "Invalid vehicle id" });
+    }
+
     return res.status(500).json({ error: error.message });
   }
 };
 
 exports.deleteVehicle = async (req, res) => {
   try {
-    const ownerId = req.user?._id || req.user?.id;
+    const ownerId = getOwnerId(req);
     const { id } = req.params;
 
     const vehicle = await Vehicle.findOneAndDelete({ _id: id, ownerId });
@@ -77,6 +97,10 @@ exports.deleteVehicle = async (req, res) => {
 
     return res.status(200).json({ message: "Vehicle deleted successfully" });
   } catch (error) {
+    if (error.name === "CastError") {
+      return res.status(400).json({ error: "Invalid vehicle id" });
+    }
+
     return res.status(500).json({ error: error.message });
   }
 };

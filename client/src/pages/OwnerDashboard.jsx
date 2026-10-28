@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 import GlassCard from "../components/GlassCard";
@@ -7,19 +7,12 @@ import Icon from "../components/ui/Icon";
 import PageHeader from "../components/ui/PageHeader";
 import StatCard from "../components/ui/StatCard";
 import useAuth from "../hooks/useAuth";
-
-const seedVehicles = [
-  { _id: "1", name: "Sample: Mercedes E-Class", type: "Sedan", plate: "KA-01-AB-1024", available: true },
-  { _id: "2", name: "Sample: BMW X5", type: "SUV", plate: "KA-05-CD-9081", available: false }
-];
+import useVehicles from "../hooks/useVehicles";
 
 function OwnerDashboard() {
   const { user } = useAuth();
-  const [vehicles, setVehicles] = useState(seedVehicles);
-
-  const toggleAvailability = (id) => {
-    setVehicles((prev) => prev.map((v) => (v._id === id ? { ...v, available: !v.available } : v)));
-  };
+  const { vehicles, loading, busyId, toggleAvailability } = useVehicles();
+  const availableCount = vehicles.filter((v) => v.availability).length;
 
   return (
     <div>
@@ -34,19 +27,36 @@ function OwnerDashboard() {
       />
 
       <div className="mb-6 grid gap-4 sm:grid-cols-3">
-        <StatCard icon="car" label="Vehicles" value={vehicles.length} hint="Sample data" />
-        <StatCard icon="list" label="Pending approvals" value="0" hint="Sample data" />
-        <StatCard icon="chart" label="Utilisation" value="--" hint="Sample data" />
+        <StatCard icon="car" label="Vehicles" value={vehicles.length} />
+        <StatCard icon="check" label="Available now" value={availableCount} />
+        <StatCard icon="list" label="Pending approvals" value="0" hint="Coming soon" />
       </div>
 
       <section className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-4 lg:col-span-2">
           <h2 className="text-xl font-semibold">Your fleet</h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            {vehicles.map((vehicle) => (
-              <VehicleCard key={vehicle._id} vehicle={vehicle} onToggle={toggleAvailability} />
-            ))}
-          </div>
+          {loading ? (
+            <p className="text-sm text-subtle">Loading vehicles…</p>
+          ) : vehicles.length === 0 ? (
+            <GlassCard className="flex flex-col items-center gap-2 py-10 text-center text-muted">
+              <Icon name="car" size={32} className="text-brand" />
+              <p className="text-sm">You have no vehicles yet.</p>
+              <Link to="/vehicles" className="text-sm font-semibold text-brand hover:underline">
+                Add your first vehicle
+              </Link>
+            </GlassCard>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2">
+              {vehicles.map((vehicle) => (
+                <VehicleCard
+                  key={vehicle._id}
+                  vehicle={vehicle}
+                  busy={busyId === vehicle._id}
+                  onToggle={toggleAvailability}
+                />
+              ))}
+            </div>
+          )}
         </div>
         <GlassCard className="h-fit">
           <h3 className="font-semibold">Ride approvals</h3>
