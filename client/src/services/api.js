@@ -42,7 +42,10 @@ export const rideApi = {
 };
 
 export const vehicleApi = {
-  create: (payload) => api.post("/vehicles", payload)
+  list: () => api.get("/vehicles/my"),
+  create: (payload) => api.post("/vehicles", payload),
+  setAvailability: (id, availability) => api.patch(`/vehicles/${id}`, { availability }),
+  remove: (id) => api.delete(`/vehicles/${id}`)
 };
 
 export default api;
